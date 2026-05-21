@@ -1,3 +1,5 @@
+from .drink import Drink
+
 class VendingMachine:
     def __init__(self):
         self.__drinks = []

@@ -4,7 +4,10 @@ class Money:
         self.__quantity = quantity
 
     def __str__(self) -> str:
-        return f"{self.__value/100:.2f} {self.__quantity}"
+        return (
+            f'Nota/Moeda: R$ {self.__value/100:<6.2f} | '
+            f'Quantidade: {self.__quantity:<3}'
+        )
 
     @property
     def value(self):

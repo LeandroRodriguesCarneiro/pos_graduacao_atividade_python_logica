@@ -1,6 +1,7 @@
 import getpass
 
 from cls import Drink, VendingMachine, Money
+from .suport import pagination, get_number_value
 
 def admin_menu(machine):
     while True:
@@ -23,24 +24,26 @@ def admin_menu(machine):
 
             case '1':
                 machine.show_drinks()
+                pagination()
 
             case '2':
-                code = int(input('Código: '))
+                code = int(get_number_value('Código: '))
                 name = input('Nome: ')
                 price = int(
                     float(input('Preço (ex: 5.50): ')) * 100
                 )
-                stock = int(input('Quantidade em estoque: '))
+                stock = int(get_number_value('Quantidade em estoque: '))
 
                 product = Drink(code, name, price, stock)
                 machine.add_drink(product)
 
                 print('\nProduto cadastrado com sucesso!')
+                pagination()
 
             case '3':
                 print('\n')
                 machine.show_drinks()
-                code = int(input('Digite o código do produto: '))
+                code = int(get_number_value('Digite o código do produto: '))
 
                 product = machine.get_drink(code)
 
@@ -70,24 +73,29 @@ def admin_menu(machine):
                     product.stock = int(stock)
 
                 print('\nProduto atualizado!')
+                pagination()
 
             case '4':
                 machine.show_drinks()
-                code = input('Digite o código do produto: ')
+                code = int(get_number_value('Digite o código do produto: '))
 
-                if machine.remove_drink(int(code)) is None:
+                if machine.remove_drink(code) is None:
                     print('\nProduto removido!')
                 else:
                     print('\nProduto não encontrado!')
+                pagination()
 
             case '5':
                 machine.show_money()
+                pagination()
 
             case '0':
+                pagination()
                 return
 
             case _:
                 print('\nOpção inválida!')
+                pagination()
 
 def sales_menu(machine):
     while True:
@@ -103,7 +111,8 @@ def sales_menu(machine):
         code = input('\nDigite o código do produto: ')
 
         if code == '0':
-            break
+            pagination()
+            return
 
         product = machine.get_drink(int(code))
 
@@ -112,6 +121,7 @@ def sales_menu(machine):
             continue
 
         machine.buy_drink(product)
+        pagination()
 
 def start(machine: VendingMachine):
 

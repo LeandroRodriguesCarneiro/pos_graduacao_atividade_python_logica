@@ -94,6 +94,7 @@ class VendingMachine:
             print(drink)
             if drink.stock <= 0:
                 print('\nProduto sem estoque!')
+                return
 
             print(
                 f'\nProduto selecionado: {drink.name}'

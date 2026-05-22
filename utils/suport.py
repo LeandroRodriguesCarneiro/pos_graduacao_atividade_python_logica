@@ -3,7 +3,7 @@ import os
 def get_number_value(msg):
     while True:
         try:
-            var = input(msg)
+            var = input(msg).replace(',', '.')
 
             return float(var)
         

@@ -44,32 +44,54 @@ class VendingMachine:
         for money in self.__money_bank:
             print(money)
 
-    def __calc_change(self, value: float, price: float):
+    def __calc_change(self, value: int, price: int):
         change = value - price
 
         if change < 0:
-            print('Não é possivel comprar')
+            print('Não é possível comprar')
+            return False
         
+        if change == 0:
+            print('\nCompra realizada sem troco.')
+            return True
+
+        response = (
+            f'\nTroco: R$ {change/100:.2f}\n'
+        )
+
         for money in self.__money_bank:
             if change >= money.value:
                 qtd_necessaria = change // money.value
-                qtd_usada = min(qtd_necessaria, money.quantity)
-                valor_total = qtd_usada * money.value
-                print(
-                    f'R$ {money.value/100:.2f} '
-                    f'- {qtd_usada}'
-                    f'= R$ {valor_total/100:.2f}'
+
+                qtd_used = min(
+                    qtd_necessaria,
+                    money.quantity
                 )
-                change -= valor_total
+                if qtd_used > 0:
+                    valor_total = qtd_used * money.value
+
+                    response += (
+                        f'- R$ {money.value/100:>6.2f} '
+                        f'x {qtd_used:<3} '
+                        f'= R$ {valor_total/100:.2f}\n'
+                    )
+
+                    change -= valor_total
+                    money.quantity -= qtd_used
 
         if change > 0:
-            print(f"\nNão foi possível fornecer o troco completo.")
-            print(f"Faltam R$ {change/100:.2f}")
+            print('\nNão foi possível fornecer o troco completo.')
+            print(f'Faltam R$ {change/100:.2f}')
+           
+            return False
 
-    def buy_drink(self, drink_id):
+        print(response)
+
+        return True
+
+    def buy_drink(self, drink):
         try:
-            drink = self.get_drink(drink_id)
-
+            print(drink)
             if drink.stock <= 0:
                 print('\nProduto sem estoque!')
 
@@ -90,21 +112,10 @@ class VendingMachine:
                 print('\nValor insuficiente! Compra cancelada')
                 return
 
-            result = self.__calc_change(drink.price, payment)
+            result = self.__calc_change(payment, drink.price)
 
-            if not result:
-                print('\nNão foi possível fornecer o troco.')
-                print('Compra cancelada!')
-
-            print('\nTroco entregue:')
-
-            for money, qtd in result:
-                print(
-                    f'R$ {money.value/100:.2f} '
-                    f'x {qtd}'
-                )
-
-            drink.stock -= 1
+            if result:
+                drink.stock -= 1
 
             print('\nCompra realizada com sucesso!')
         except Exception as e:

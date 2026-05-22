@@ -17,14 +17,38 @@ class Drink:
     def id(self):
         return self.__id
 
+    @id.setter
+    def id(self, value):
+        self.__id = value
+
     @property
     def name(self):
         return self.__name
+
+    @name.setter
+    def name(self, value):
+        self.__name = value
 
     @property
     def price(self):
         return self.__price
 
+    @price.setter
+    def price(self, value):
+
+        if value < 0:
+            raise ValueError('O preço não pode ser negativo')
+
+        self.__price = value
+
     @property
     def stock(self):
         return self.__stock
+
+    @stock.setter
+    def stock(self, value):
+
+        if value < 0:
+            raise ValueError('O estoque não pode ser negativo')
+
+        self.__stock = value

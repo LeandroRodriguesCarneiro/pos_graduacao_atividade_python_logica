@@ -12,7 +12,15 @@ class Money:
     @property
     def value(self):
         return self.__value
+    
+    @value.setter
+    def value(self, value: int):
+        self.__value = value
 
     @property
     def quantity(self):
         return self.__quantity
+    
+    @quantity.setter
+    def quantity(self, quantity: int):
+        self.__quantity = quantity

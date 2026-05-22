@@ -13,8 +13,8 @@ class VendingMachine:
         for drink in self.__drinks:
             if drink.id == drink_id:
                 return drink
-        else:
-            Exception(f"Drink with id {drink_id} not found")
+        
+        return None
 
     def remove_drink(self, drink_id):
         drink = self.get_drink(drink_id)
@@ -59,31 +59,36 @@ class VendingMachine:
             f'\nTroco: R$ {change/100:.2f}\n'
         )
 
+        temp_change = change
+        temp_result = []
+
         for money in self.__money_bank:
-            if change >= money.value:
-                qtd_necessaria = change // money.value
+            if temp_change >= money.value:
+                qtd_necessaria = temp_change // money.value
 
                 qtd_used = min(
                     qtd_necessaria,
                     money.quantity
                 )
+
                 if qtd_used > 0:
-                    valor_total = qtd_used * money.value
+                    temp_result.append((money, qtd_used))
+                    temp_change -= qtd_used * money.value
 
                     response += (
                         f'- R$ {money.value/100:>6.2f} '
                         f'x {qtd_used:<3} '
-                        f'= R$ {valor_total/100:.2f}\n'
+                        f'= R$ {(qtd_used * money.value)/100:.2f}\n'
                     )
 
-                    change -= valor_total
-                    money.quantity -= qtd_used
-
-        if change > 0:
+        if temp_change > 0:
             print('\nNão foi possível fornecer o troco completo.')
-            print(f'Faltam R$ {change/100:.2f}')
+            print(f'Faltam R$ {temp_change/100:.2f}')
            
             return False
+
+        for money, qtd_used in temp_result:
+            money.quantity -= qtd_used
 
         print(response)
 
@@ -118,6 +123,6 @@ class VendingMachine:
             if result:
                 drink.stock -= 1
 
-            print('\nCompra realizada com sucesso!')
+                print('\nCompra realizada com sucesso!')
         except Exception as e:
             print(e)
